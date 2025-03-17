@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Сайт находится в стадии разработки. Скоро здесь появится что-то невероятное!">
+    <meta name="robots" content="noindex"> <!-- Чтобы поисковики не индексировали заглушку -->
+    <title>В разработке | [Название проекта]</title>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+            --bg-gradient: linear-gradient(135deg, #1e1e2f 0%, #2a2a4a 100%);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.85);
+            --shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            --border-radius: 20px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .wrapper {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero {
+            padding: 3rem;
+            background: var(--glass-bg);
+            border-radius: var(--border-radius);
+            backdrop-filter: blur(12px);
+            box-shadow: var(--shadow);
+            text-align: center;
+            max-width: 700px;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: slideIn 1s forwards 0.5s;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        p {
+            font-size: 1.25rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .progress {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress::after {
+            content: '';
+            position: absolute;
+            width: 70%;
+            height: 100%;
+            background: var(--primary-gradient);
+            animation: progressPulse 2.5s infinite ease-in-out;
+        }
+
+        .canvas-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes slideIn {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes progressPulse {
+            0%, 100% { width: 50%; }
+            50% { width: 90%; }
+        }
+
+        @media (max-width: 600px) {
+            .hero {
+                padding: 2rem;
+            }
+            h1 {
+                font-size: 2.5rem;
+            }
+            p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <section class="hero">
+            <h1>Сайт в разработке</h1>
+            <p>Мы создаём нечто выдающееся. Ожидайте запуск в ближайшем будущем — это будет эпично!</p>
+            <div class="progress"></div>
+        </section>
+    </div>
+
+    <canvas class="canvas-bg" id="particles"></canvas>
+
+    <script>
+        // Модуль частиц для фона
+        (function() {
+            const canvas = document.getElementById('particles');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const particles = [];
+            const particleCount = 50;
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = canvas.height + Math.random() * 100;
+                    this.size = Math.random() * 5 + 1;
+                    this.speed = Math.random() * 1 + 0.5;
+                    this.opacity = Math.random() * 0.5 + 0.2;
+                }
+
+                update() {
+                    this.y -= this.speed;
+                    if (this.y < -this.size) {
+                        this.y = canvas.height + this.size;
+                        this.x = Math.random() * canvas.width;
+                    }
+                }
+
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+                    ctx.fill();
+                }
+            }
+
+            // Инициализация частиц
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(particle => {
+                    particle.update();
+                    particle.draw();
+                });
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+
+            // Обработка изменения размера окна
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        })();
+    </script>
+</body>
+</html>
