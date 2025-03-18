@@ -9,12 +9,12 @@
     <style>
         :root {
             --primary-gradient: linear-gradient(90deg, #ff6b6b, #4ecdc4);
-            --bg-gradient: linear-gradient(135deg, #1e1e2f 0%, #2a2a4a 100%);
+            --bg-gradient: linear-gradient(135deg, #0f0f1a 0%, #1e1e2f 100%);
             --glass-bg: rgba(255, 255, 255, 0.05);
             --text-primary: #ffffff;
             --text-secondary: rgba(255, 255, 255, 0.85);
-            --shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-            --border-radius: 20px;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            --border-radius: 16px;
             --terminal-bg: #1a1a2e;
             --terminal-text: #00ff9d;
         }
@@ -27,35 +27,31 @@
 
         body {
             min-height: 100vh;
-            display: grid;
-            place-items: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg-gradient);
             color: var(--text-primary);
-            overflow: hidden;
-            position: relative;
-        }
-
-        .wrapper {
-            position: relative;
-            z-index: 1;
+            padding: 20px;
         }
 
         .hero {
-            padding: 3rem;
+            padding: 2rem;
             background: var(--glass-bg);
             border-radius: var(--border-radius);
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(10px);
             box-shadow: var(--shadow);
             text-align: center;
+            width: 100%;
             max-width: 700px;
-            transform: translateY(20px);
             opacity: 0;
             animation: slideIn 1s forwards 0.5s;
         }
 
         h1 {
-            font-size: 3.5rem;
+            font-size: 2.5rem;
             font-weight: 800;
             background: var(--primary-gradient);
             -webkit-background-clip: text;
@@ -66,46 +62,38 @@
         }
 
         p {
-            font-size: 1.25rem;
-            line-height: 1.8;
+            font-size: 1.1rem;
+            line-height: 1.6;
             color: var(--text-secondary);
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
 
         .terminal {
             background: var(--terminal-bg);
             border-radius: 8px;
-            padding: 1.5rem;
+            padding: 1rem;
             font-family: 'Courier New', monospace;
-            font-size: 1rem;
+            font-size: 0.9rem;
             color: var(--terminal-text);
-            height: 200px;
-            overflow: hidden;
+            min-height: 150px;
+            max-height: 250px;
+            overflow-y: auto;
             position: relative;
-            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.5);
             white-space: pre-wrap;
             word-wrap: break-word;
+            text-align: left;
+            line-height: 1.4;
         }
 
         .terminal::before {
-            content: '> ';
+            content: '$ ';
             color: #ff6b6b;
             animation: blink 1s infinite step-end;
         }
 
-        .canvas-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
-        }
-
         @keyframes slideIn {
             to {
-                transform: translateY(0);
                 opacity: 1;
             }
         }
@@ -114,150 +102,132 @@
             50% { opacity: 0; }
         }
 
+        /* Адаптивность */
         @media (max-width: 600px) {
             .hero {
-                padding: 2rem;
+                padding: 1.5rem;
             }
             h1 {
-                font-size: 2.5rem;
+                font-size: 1.8rem;
             }
             p {
-                font-size: 1rem;
+                font-size: 0.95rem;
             }
             .terminal {
-                height: 150px;
-                font-size: 0.9rem;
+                font-size: 0.75rem;
+                min-height: 120px;
+                max-height: 200px;
+                padding: 0.75rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+            p {
+                font-size: 0.85rem;
+            }
+            .terminal {
+                font-size: 0.65rem;
+                min-height: 100px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="wrapper">
-        <section class="hero">
-            <h1>Сайт в разработке</h1>
-            <p>Мы создаём нечто выдающееся. Ожидайте запуск в ближайшем будущем — это будет эпично!</p>
-            <div class="terminal" id="terminal"></div>
-        </section>
-    </div>
-
-    <canvas class="canvas-bg" id="particles"></canvas>
+    <section class="hero">
+        <h1>Сайт в разработке</h1>
+        <p>Мы создаём нечто выдающееся. Ожидайте запуск в ближайшем будущем — это будет эпично!</p>
+        <div class="terminal" id="terminal"></div>
+    </section>
 
     <script>
-        // Частицы на Canvas
-        (function() {
-            const canvas = document.getElementById('particles');
-            const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-
-            const particles = [];
-            const particleCount = 50;
-
-            class Particle {
-                constructor() {
-                    this.x = Math.random() * canvas.width;
-                    this.y = canvas.height + Math.random() * 100;
-                    this.size = Math.random() * 5 + 1;
-                    this.speed = Math.random() * 1 + 0.5;
-                    this.opacity = Math.random() * 0.5 + 0.2;
-                }
-
-                update() {
-                    this.y -= this.speed;
-                    if (this.y < -this.size) {
-                        this.y = canvas.height + this.size;
-                        this.x = Math.random() * canvas.width;
-                    }
-                }
-
-                draw() {
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
-                    ctx.fill();
-                }
-            }
-
-            for (let i = 0; i < particleCount; i++) {
-                particles.push(new Particle());
-            }
-
-            function animate() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                particles.forEach(particle => {
-                    particle.update();
-                    particle.draw();
-                });
-                requestAnimationFrame(animate);
-            }
-
-            animate();
-            window.addEventListener('resize', () => {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            });
-        })();
-
         // Эффект терминала
         (function() {
             const terminal = document.getElementById('terminal');
             const codeSnippets = [
-                `function initializeApp() {
-                    const config = { apiKey: "xyz", authDomain: "project-123.firebaseapp.com" };
-                    firebase.initializeApp(config);
-                    const db = firebase.firestore();
-                    return db.collection("users").get().then(query => {
-                        query.forEach(doc => console.log(doc.data()));
-                    }).catch(err => console.error("Error:", err));
-                }`,
-                `class QuantumProcessor {
-                    constructor(qubits) {
-                        this.qubits = qubits;
-                        this.state = this.initializeState();
-                    }
-                    initializeState() {
-                        return Array(this.qubits).fill(0).map(() => Math.random() > 0.5 ? 1 : 0);
-                    }
-                    entangle(pairs) {
-                        pairs.forEach(([a, b]) => this.state[a] = this.state[b]);
-                    }
-                }`,
-                `const express = require('express');
-                const app = express();
-                app.use(express.json());
-                app.get('/api/v1/status', (req, res) => {
-                    res.status(200).json({ status: 'Building...', uptime: process.uptime() });
-                });
-                app.listen(3000, () => console.log('Server running on port 3000'));`
+                `#!/bin/bash
+# Deployment script
+echo "Initializing deployment..."
+git pull origin main
+npm install
+npm run build
+pm2 restart app
+echo "Deployment complete!"`,
+                `// Core application logic
+const initializeSystem = async () => {
+    try {
+        const response = await fetch('/api/config');
+        const config = await response.json();
+        console.log('Config loaded:', config);
+        const db = await connectToDatabase(config.db);
+        await db.migrate.latest();
+        return startServer(db);
+    } catch (error) {
+        console.error('Initialization failed:', error);
+        process.exit(1);
+    }
+};
+initializeSystem();`,
+                `/* CSS Animation */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+.component {
+    animation: pulse 2s infinite;
+    background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+    border-radius: 8px;
+    padding: 20px;
+}`
             ];
 
-            let currentSnippet = '';
-            let charIndex = 0;
-            const typingSpeed = 50; // Скорость печати в миллисекундах
+            let lines = [];
+            const maxLines = 12; // Ограничение по количеству строк для мобильных
+            const typingSpeed = 100; // Скорость печати в миллисекундах
 
             function getRandomSnippet() {
-                return codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+                return codeSnippets[Math.floor(Math.random() * codeSnippets.length)].split('\n');
             }
 
-            function typeCode() {
+            function typeLine(line, charIndex = 0) {
+                if (lines.length >= maxLines) {
+                    lines.shift(); // Удаляем первую строку, если превышен лимит
+                }
+
                 if (charIndex === 0) {
-                    currentSnippet = getRandomSnippet();
-                    terminal.textContent = '';
+                    lines.push('');
                 }
 
-                if (charIndex < currentSnippet.length) {
-                    terminal.textContent += currentSnippet[charIndex];
-                    charIndex++;
-                    setTimeout(typeCode, typingSpeed);
+                if (charIndex < line.length) {
+                    lines[lines.length - 1] = line.substring(0, charIndex + 1);
+                    terminal.textContent = lines.join('\n');
+                    terminal.scrollTop = terminal.scrollHeight; // Прокрутка вниз
+                    setTimeout(() => typeLine(line, charIndex + 1), typingSpeed);
                 } else {
-                    setTimeout(() => {
-                        charIndex = 0; // Сброс для нового цикла
-                        typeCode();
-                    }, 2000); // Пауза перед новым циклом
+                    setTimeout(typeNextLine, 500); // Пауза перед новой строкой
                 }
             }
 
-            typeCode();
+            function typeNextLine() {
+                const snippetLines = getRandomSnippet();
+                let lineIndex = 0;
+
+                function next() {
+                    if (lineIndex < snippetLines.length) {
+                        typeLine(snippetLines[lineIndex]);
+                        lineIndex++;
+                    } else {
+                        setTimeout(typeNextLine, 2000); // Пауза перед новым циклом
+                    }
+                }
+
+                next();
+            }
+
+            typeNextLine();
         })();
     </script>
 </body>
