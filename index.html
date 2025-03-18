@@ -17,6 +17,7 @@
             --border-radius: 16px;
             --terminal-bg: #1a1a2e;
             --terminal-text: #00ff9d;
+            --terminal-prompt: #ff6b6b;
         }
 
         * {
@@ -86,10 +87,12 @@
             line-height: 1.4;
         }
 
-        .terminal::before {
-            content: '$ ';
-            color: #ff6b6b;
-            animation: blink 1s infinite step-end;
+        .prompt {
+            color: var(--terminal-prompt);
+        }
+
+        .log {
+            color: #ffffff;
         }
 
         @keyframes slideIn {
@@ -98,11 +101,6 @@
             }
         }
 
-        @keyframes blink {
-            50% { opacity: 0; }
-        }
-
-        /* Адаптивность */
         @media (max-width: 600px) {
             .hero {
                 padding: 1.5rem;
@@ -146,287 +144,120 @@
         // Эффект терминала
         (function() {
             const terminal = document.getElementById('terminal');
-            const codeSnippets = [
-               <!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Сайт находится в стадии разработки. Скоро здесь появится что-то невероятное!">
-    <meta name="robots" content="noindex">
-    <title>В разработке | [Название проекта]</title>
-    <style>
-        :root {
-            --primary-gradient: linear-gradient(90deg, #ff6b6b, #4ecdc4);
-            --bg-gradient: linear-gradient(135deg, #0f0f1a 0%, #1e1e2f 100%);
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.85);
-            --shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            --border-radius: 16px;
-            --terminal-bg: #1a1a2e;
-            --terminal-text: #00ff9d;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-gradient);
-            color: var(--text-primary);
-            padding: 20px;
-        }
-
-        .hero {
-            padding: 2rem;
-            background: var(--glass-bg);
-            border-radius: var(--border-radius);
-            backdrop-filter: blur(10px);
-            box-shadow: var(--shadow);
-            text-align: center;
-            width: 100%;
-            max-width: 700px;
-            opacity: 0;
-            animation: slideIn 1s forwards 0.5s;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 1.5rem;
-            letter-spacing: -0.02em;
-        }
-
-        p {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-        }
-
-        .terminal {
-            background: var(--terminal-bg);
-            border-radius: 8px;
-            padding: 1rem;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-            color: var(--terminal-text);
-            min-height: 150px;
-            max-height: 250px;
-            overflow-y: auto;
-            position: relative;
-            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.5);
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            text-align: left;
-            line-height: 1.4;
-        }
-
-        .terminal::before {
-            content: '$ ';
-            color: #ff6b6b;
-            animation: blink 1s infinite step-end;
-        }
-
-        @keyframes slideIn {
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes blink {
-            50% { opacity: 0; }
-        }
-
-        /* Адаптивность */
-        @media (max-width: 600px) {
-            .hero {
-                padding: 1.5rem;
-            }
-            h1 {
-                font-size: 1.8rem;
-            }
-            p {
-                font-size: 0.95rem;
-            }
-            .terminal {
-                font-size: 0.75rem;
-                min-height: 120px;
-                max-height: 200px;
-                padding: 0.75rem;
-            }
-        }
-
-        @media (max-width: 400px) {
-            h1 {
-                font-size: 1.5rem;
-            }
-            p {
-                font-size: 0.85rem;
-            }
-            .terminal {
-                font-size: 0.65rem;
-                min-height: 100px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <section class="hero">
-        <h1>Сайт в разработке</h1>
-        <p>Мы создаём нечто выдающееся. Ожидайте запуск в ближайшем будущем — это будет эпично!</p>
-        <div class="terminal" id="terminal"></div>
-    </section>
-
-    <script>
-        // Эффект терминала
-        (function() {
-            const terminal = document.getElementById('terminal');
-            const codeSnippets = [
-                `#!/bin/bash
-# Deployment script
-echo "Initializing deployment..."
-git pull origin main
-npm install
-npm run build
-pm2 restart app
-echo "Deployment complete!"`,
-                `// Core application logic
-const initializeSystem = async () => {
-    try {
-        const response = await fetch('/api/config');
-        const config = await response.json();
-        console.log('Config loaded:', config);
-        const db = await connectToDatabase(config.db);
-        await db.migrate.latest();
-        return startServer(db);
-    } catch (error) {
-        console.error('Initialization failed:', error);
-        process.exit(1);
-    }
-};
-initializeSystem();`,
-                `/* CSS Animation */
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
-}
-.component {
-    animation: pulse 2s infinite;
-    background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-    border-radius: 8px;
-    padding: 20px;
-}`
+            const sequences = [
+                {
+                    steps: [
+                        { text: "#!/bin/bash", prompt: true },
+                        { text: "# Deployment script", prompt: false },
+                        { text: "echo \"Initializing deployment...\"", prompt: true },
+                        { text: "Initializing deployment...", prompt: false, class: 'log', delay: 500 },
+                        { text: "git pull origin main", prompt: true },
+                        { text: "Fetching updates... Done", prompt: false, class: 'log', delay: 1000 },
+                        { text: "npm install", prompt: true },
+                        { text: "Installing dependencies... Done", prompt: false, class: 'log', delay: 1500 },
+                        { text: "npm run build", prompt: true },
+                        { text: "Building project... Done", prompt: false, class: 'log', delay: 2000 },
+                        { text: "pm2 restart app", prompt: true },
+                        { text: "Restarting application... Done", prompt: false, class: 'log', delay: 800 },
+                        { text: "echo \"Deployment complete!\"", prompt: true },
+                        { text: "Deployment complete!", prompt: false, class: 'log', delay: 500 }
+                    ]
+                },
+                {
+                    steps: [
+                        { text: "// Core application logic", prompt: false },
+                        { text: "const initializeSystem = async () => {", prompt: true },
+                        { text: "    try {", prompt: true },
+                        { text: "        const response = await fetch('/api/config');", prompt: true },
+                        { text: "Fetching config...", prompt: false, class: 'log', delay: 800 },
+                        { text: "        const config = await response.json();", prompt: true },
+                        { text: "        console.log('Config loaded:', config);", prompt: true },
+                        { text: "Config loaded: { apiKey: '...', db: '...' }", prompt: false, class: 'log', delay: 500 },
+                        { text: "        const db = await connectToDatabase(config.db);", prompt: true },
+                        { text: "Connecting to database... Done", prompt: false, class: 'log', delay: 1000 },
+                        { text: "        await db.migrate.latest();", prompt: true },
+                        { text: "Running migrations... Done", prompt: false, class: 'log', delay: 1200 },
+                        { text: "        return dimensionsServer(db);", prompt: true },
+                        { text: "Server started on port 3000", prompt: false, class: 'log', delay: 600 },
+                        { text: "    } catch (error) {", prompt: true },
+                        { text: "        console.error('Initialization failed:', error);", prompt: true },
+                        { text: "    }", prompt: true },
+                        { text: "};", prompt: true },
+                        { text: "initializeSystem();", prompt: true }
+                    ]
+                },
+                {
+                    steps: [
+                        { text: "/* CSS Animation */", prompt: false },
+                        { text: "@keyframes pulse {", prompt: true },
+                        { text: "    0% { transform: scale(1); }", prompt: true },
+                        { text: "    50% { transform: scale(1.05); }", prompt: true },
+                        { text: "    100% { transform: scale(1); }", prompt: true },
+                        { text: "}", prompt: true },
+                        { text: ".component {", prompt: true },
+                        { text: "    animation: pulse 2s infinite;", prompt: true },
+                        { text: "    background: linear-gradient(45deg, #ff6b6b, #4ecdc4);", prompt: true },
+                        { text: "    border-radius: 8px;", prompt: true },
+                        { text: "    padding: 20px;", prompt: true },
+                        { text: "}", prompt: true },
+                        { text: "/* Compiling CSS... */", prompt: false, class: 'log', delay: 800 },
+                        { text: "CSS compiled successfully", prompt: false, class: 'log', delay: 500 }
+                    ]
+                }
             ];
 
             let lines = [];
-            const maxLines = 12; // Ограничение по количеству строк для мобильных
-            const typingSpeed = 100; // Скорость печати в миллисекундах
+            const maxLines = 12;
+            const typingSpeed = 50; // Скорость печати символов
 
-            function getRandomSnippet() {
-                return codeSnippets[Math.floor(Math.random() * codeSnippets.length)].split('\n');
-            }
-
-            function typeLine(line, charIndex = 0) {
-                if (lines.length >= maxLines) {
-                    lines.shift(); // Удаляем первую строку, если превышен лимит
-                }
-
+            function typeLine(text, charIndex = 0, callback) {
                 if (charIndex === 0) {
+                    if (lines.length >= maxLines) lines.shift();
                     lines.push('');
                 }
 
-                if (charIndex < line.length) {
-                    lines[lines.length - 1] = line.substring(0, charIndex + 1);
-                    terminal.textContent = lines.join('\n');
-                    terminal.scrollTop = terminal.scrollHeight; // Прокрутка вниз
-                    setTimeout(() => typeLine(line, charIndex + 1), typingSpeed);
+                if (charIndex < text.length) {
+                    lines[lines.length - 1] = text.substring(0, charIndex + 1);
+                    renderTerminal();
+                    setTimeout(() => typeLine(text, charIndex + 1, callback), typingSpeed);
                 } else {
-                    setTimeout(typeNextLine, 500); // Пауза перед новой строкой
+                    callback();
                 }
             }
 
-            function typeNextLine() {
-                const snippetLines = getRandomSnippet();
-                let lineIndex = 0;
+            function renderTerminal() {
+                terminal.innerHTML = lines.map(line => {
+                    const isPrompt = line.startsWith('#') || line.trim().startsWith('const') || line.trim().startsWith('@') || !line.startsWith(' ') && !line.startsWith('/*');
+                    return `<span class="${isPrompt ? 'prompt' : 'log'}">${line}</span>`;
+                }).join('\n');
+                terminal.scrollTop = terminal.scrollHeight;
+            }
 
-                function next() {
-                    if (lineIndex < snippetLines.length) {
-                        typeLine(snippetLines[lineIndex]);
-                        lineIndex++;
+            function runSequence(sequence) {
+                let stepIndex = 0;
+
+                function nextStep() {
+                    if (stepIndex < sequence.steps.length) {
+                        const step = sequence.steps[stepIndex];
+                        typeLine(step.text, 0, () => {
+                            setTimeout(nextStep, step.delay || 200);
+                        });
+                        stepIndex++;
                     } else {
-                        setTimeout(typeNextLine, 2000); // Пауза перед новым циклом
+                        setTimeout(runRandomSequence, 2000); // Пауза перед новым циклом
                     }
                 }
 
-                next();
+                nextStep();
             }
 
-            typeNextLine();
-        })();
-    </script>
-</body>
-</html>
-            ];
-
-            let lines = [];
-            const maxLines = 12; // Ограничение по количеству строк для мобильных
-            const typingSpeed = 100; // Скорость печати в миллисекундах
-
-            function getRandomSnippet() {
-                return codeSnippets[Math.floor(Math.random() * codeSnippets.length)].split('\n');
+            function runRandomSequence() {
+                lines = []; // Очистка терминала
+                const randomSequence = sequences[Math.floor(Math.random() * sequences.length)];
+                runSequence(randomSequence);
             }
 
-            function typeLine(line, charIndex = 0) {
-                if (lines.length >= maxLines) {
-                    lines.shift(); // Удаляем первую строку, если превышен лимит
-                }
-
-                if (charIndex === 0) {
-                    lines.push('');
-                }
-
-                if (charIndex < line.length) {
-                    lines[lines.length - 1] = line.substring(0, charIndex + 1);
-                    terminal.textContent = lines.join('\n');
-                    terminal.scrollTop = terminal.scrollHeight; // Прокрутка вниз
-                    setTimeout(() => typeLine(line, charIndex + 1), typingSpeed);
-                } else {
-                    setTimeout(typeNextLine, 500); // Пауза перед новой строкой
-                }
-            }
-
-            function typeNextLine() {
-                const snippetLines = getRandomSnippet();
-                let lineIndex = 0;
-
-                function next() {
-                    if (lineIndex < snippetLines.length) {
-                        typeLine(snippetLines[lineIndex]);
-                        lineIndex++;
-                    } else {
-                        setTimeout(typeNextLine, 2000); // Пауза перед новым циклом
-                    }
-                }
-
-                next();
-            }
-
-            typeNextLine();
+            runRandomSequence();
         })();
     </script>
 </body>
