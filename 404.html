@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Страница не найдена</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #0f172a;
+            color: #e2e8f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            padding: 20px;
+            border: 2px solid #334155;
+            border-radius: 10px;
+            background-color: rgba(15, 23, 42, 0.8);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+        }
+        h1 {
+            color: #10b981;
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+        .error-code {
+            font-size: 8rem;
+            font-weight: bold;
+            color: #10b981;
+            margin: 0;
+            text-shadow: 0 0 10px #10b981;
+        }
+        p {
+            font-size: 1.2rem;
+            margin: 20px 0;
+        }
+        a {
+            color: #38bdf8;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        a:hover {
+            color: #10b981;
+            text-decoration: underline;
+        }
+        .terminal {
+            background-color: #1e293b;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: left;
+            font-family: monospace;
+            overflow: hidden;
+        }
+        .terminal-line {
+            line-height: 1.5;
+        }
+        .terminal-prompt {
+            color: #10b981;
+        }
+        .terminal-cursor {
+            display: inline-block;
+            width: 10px;
+            height: 20px;
+            background-color: #10b981;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+        @keyframes blink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="error-code">404</h1>
+        <h2>Страница не найдена</h2>
+        <div class="terminal">
+            <div class="terminal-line"><span class="terminal-prompt">></span> Система не может обнаружить запрошенный путь.</div>
+            <div class="terminal-line"><span class="terminal-prompt">></span> Выполняется поиск альтернативных путей...</div>
+            <div class="terminal-line"><span class="terminal-prompt">></span> Ошибка: объект не найден в космическом пространстве.</div>
+            <div class="terminal-line"><span class="terminal-prompt">></span> Рекомендация: вернуться на главную страницу<span class="terminal-cursor"></span></div>
+        </div>
+        <p>Похоже, вы пытаетесь получить доступ к несуществующей странице. Возможно, она была перемещена или удалена.</p>
+        <p><a href="/">Вернуться на главную страницу</a></p>
+    </div>
+</body>
+</html>
